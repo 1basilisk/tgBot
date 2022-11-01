@@ -53,9 +53,9 @@ def lookup():
 
 
 
-def tsla_stock(update: Update, context: CallbackContext):
+def stock_quote(update: Update, context: CallbackContext):
     quote = lookup()
-    price = "tesla stock: $"+ str(quote["price"])
+    price = quote["name"] +  " stock: $"+ str(quote["price"])
     update.message.reply_text(price)
 
 
@@ -71,7 +71,7 @@ def unknown_text(update: Update, context: CallbackContext):
 
 
 updater.dispatcher.add_handler(CommandHandler('start', start))
-updater.dispatcher.add_handler(CommandHandler('tesla', tsla_stock))
+updater.dispatcher.add_handler(CommandHandler('tesla', stock_quote))
 updater.dispatcher.add_handler(CommandHandler('help', help))
 
 updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown))
