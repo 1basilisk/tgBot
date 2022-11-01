@@ -6,9 +6,11 @@ from telegram.ext.messagehandler import MessageHandler
 from telegram.ext.filters import Filters
 import requests
 import urllib.parse
+import os
 
-updater = Updater("5796621915:AAH2gU9gS7ktbdRdmxWWwPdejjK-dfWdWq0",
-				use_context=True)
+token = os.getenv("token")
+
+updater = Updater(token, use_context=True)
 
 
 def start(update: Update, context: CallbackContext):
@@ -26,7 +28,7 @@ def lookup():
     symbol = 'tsla'
     # Contact API
     try:
-        api_key = "pk_5bfcde5e156d4f1f8792e7cc5bd9e6a7"
+        api_key = os.getenv("API_KEY")
         url = f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}"
         response = requests.get(url)
         response.raise_for_status()
