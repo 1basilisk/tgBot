@@ -9,23 +9,23 @@ import urllib.parse
 import os
 
 token = os.getenv("token")
-
+symbol = ""
 updater = Updater(token, use_context=True)
 
 
 def start(update: Update, context: CallbackContext):
 	update.message.reply_text(
-		"Hello sir, Welcome to the Bot.Please write\
-		/help to see the commands available.")
+		"Enter stock symbol to get quote")
 
 def help(update: Update, context: CallbackContext):
-	update.message.reply_text("""Available Commands :-
-	/tesla - To get the tesla stock price
+	update.message.reply_text("""
+    Enter stock symbol to get current price.
+	
 	""")
 
-def lookup():
+def lookup(symbol):
     """Look up quote for symbol."""
-    symbol = 'googl'
+    
     # Contact API
     try:
         api_key = os.getenv("API_KEY")
@@ -50,19 +50,14 @@ def lookup():
             "symbol": "Invalid"
         }
 
-
-
-
-def stock_quote(update: Update, context: CallbackContext):
-    quote = lookup()
+def getQuote(update: Update, context: CallbackContext):
+    global symbol
+    symbol = update.message.text
+    # update.message.reply_text("Sorry '%s' is not a valid command" % update.message.text)
+    quote = lookup(symbol)
     price = quote["name"] +  " stock: $"+ str(quote["price"])
     update.message.reply_text(price)
-
-
-
-def unknown(update: Update, context: CallbackContext):
-	update.message.reply_text(
-		"Sorry '%s' is not a valid command" % update.message.text)
+        
 
 
 def unknown_text(update: Update, context: CallbackContext):
@@ -71,12 +66,12 @@ def unknown_text(update: Update, context: CallbackContext):
 
 
 updater.dispatcher.add_handler(CommandHandler('start', start))
-updater.dispatcher.add_handler(CommandHandler('tesla', stock_quote))
+# updater.dispatcher.add_handler(CommandHandler('tesla', stock_quote))
 updater.dispatcher.add_handler(CommandHandler('help', help))
 
-updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown))
+updater.dispatcher.add_handler(MessageHandler(Filters.text, getQuote))
 updater.dispatcher.add_handler(MessageHandler(
-	Filters.command, unknown)) # Filters out unknown commands
+	Filters.command, getQuote)) # Filters out unknown commands
 
 # Filters out unknown messages.
 updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown_text))
