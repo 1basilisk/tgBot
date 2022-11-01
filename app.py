@@ -25,7 +25,7 @@ def help(update: Update, context: CallbackContext):
 
 def lookup():
     """Look up quote for symbol."""
-    symbol = 'tsla'
+    symbol = 'googl'
     # Contact API
     try:
         api_key = os.getenv("API_KEY")
